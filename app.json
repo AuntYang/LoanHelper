@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "��������",
+    "slug": "loan-helper",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#1a73e8"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.loanhelper.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "��Ҫ���Ȩ����ɨ������֤��Ӫҵִ�յȴ�������",
+        "NSPhotoLibraryUsageDescription": "��Ҫ���Ȩ��������ͻ�����ͼƬ",
+        "NSPhotoLibraryAddUsageDescription": "��Ҫ�������ϵ����"
+      }
+    },
+    "plugins": [
+      "expo-camera",
+      "expo-sqlite",
+      "expo-document-picker"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "8f708a2d-424e-44f2-933e-936ffb5286c3"
+      }
+    },
+    "owner": "auntyang"
+  }
+}

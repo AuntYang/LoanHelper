@@ -1,0 +1,30 @@
+{
+    "cli":  {
+                "version":  "\u003e= 12.0.0"
+            },
+    "build":  {
+                  "development":  {
+                                      "ios":  {
+                                                  "simulator":  false
+                                              },
+                                      "developmentClient":  true
+                                  },
+                  "production":  {
+                                     "ios":  {
+                                                 "simulator":  false
+                                             }
+                                 },
+                  "device":  {
+                                 "distribution":  "internal",
+                                 "ios":  {
+                                             "simulator":  false
+                                         },
+                                 "extends":  "development"
+                             }
+              },
+    "submit":  {
+                   "production":  {
+
+                                  }
+               }
+}
