@@ -1,7 +1,8 @@
-﻿閿樼俯ame: Build IPA (unsigned, sign with iLoader)
+name: Build IPA (unsigned, sign with iLoader)
 
 on:
-  workflow_dispatch:  # 閹靛濮╃憴锕€褰?
+  workflow_dispatch:
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   GIT_TERMINAL_PROMPT: "0"
@@ -31,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Expo prebuild (generate ios native project)
+      - name: Expo prebuild
         run: npx expo prebuild --platform ios --clean
 
       - name: Install Pods
@@ -61,7 +62,6 @@ jobs:
           APP_DIR=$(find ios/build/Build/Products/Release-iphoneos -name "*.app" -type d 2>/dev/null | head -1)
           echo "App bundle: $APP_DIR"
           if [ -z "$APP_DIR" ]; then
-            # Fallback: search broader
             APP_DIR=$(find ios/build -name "*.app" -type d 2>/dev/null | head -1)
             echo "Fallback app bundle: $APP_DIR"
           fi
@@ -74,4 +74,3 @@ jobs:
         with:
           name: loan-helper-ipa
           path: ./*.ipa
-
