@@ -25,8 +25,6 @@ jobs:
       - name: Remove git remote to prevent 403 errors
         run: |
           git remote remove origin || true
-          echo "Git remotes after cleanup:"
-          git remote -v || echo "(none)"
 
       - name: Install CocoaPods
         run: |
@@ -39,15 +37,22 @@ jobs:
       - name: Expo prebuild (generate ios native project)
         run: npx expo prebuild --platform ios --clean
 
+      - name: List ios directory
+        run: ls -la ios/
+
       - name: Install Pods
         run: npx pod-install
 
       - name: Build unsigned .app with Xcode
         run: |
           cd ios
+          WORKSPACE=$(ls *.xcworkspace 2>/dev/null | head -1)
+          echo "Found workspace: $WORKSPACE"
+          SCHEME=$(ls *.xcodeproj 2>/dev/null | head -1 | sed 's/\.xcodeproj//')
+          echo "Using scheme: $SCHEME"
           xcodebuild \
-            -workspace loanhelper.xcworkspace \
-            -scheme loanhelper \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
             -configuration Release \
             -sdk iphoneos \
             CODE_SIGNING_REQUIRED=NO \
@@ -59,7 +64,9 @@ jobs:
       - name: Package unsigned IPA
         run: |
           mkdir -p Payload
-          cp -R ios/build/loanhelper.app Payload/
+          APP_DIR=$(ls -d ios/build/*.app 2>/dev/null | head -1)
+          echo "App bundle: $APP_DIR"
+          cp -R "$APP_DIR" Payload/
           zip -r loan-helper-unsigned.ipa Payload/
           rm -rf Payload
 
