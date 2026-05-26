@@ -37,9 +37,6 @@ jobs:
       - name: Expo prebuild (generate ios native project)
         run: npx expo prebuild --platform ios --clean
 
-      - name: List ios directory
-        run: ls -la ios/
-
       - name: Install Pods
         run: npx pod-install
 
@@ -55,17 +52,22 @@ jobs:
             -scheme "$SCHEME" \
             -configuration Release \
             -sdk iphoneos \
+            -derivedDataPath ./build \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_ALLOWED=NO \
-            CONFIGURATION_BUILD_DIR=./build \
-            clean build
+            build
 
       - name: Package unsigned IPA
         run: |
           mkdir -p Payload
-          APP_DIR=$(find ios/build -maxdepth 1 -type d -name "*.app" 2>/dev/null | head -1)
+          APP_DIR=$(find ios/build/Build/Products/Release-iphoneos -name "*.app" -type d 2>/dev/null | head -1)
           echo "App bundle: $APP_DIR"
+          if [ -z "$APP_DIR" ]; then
+            # Fallback: search broader
+            APP_DIR=$(find ios/build -name "*.app" -type d 2>/dev/null | head -1)
+            echo "Fallback app bundle: $APP_DIR"
+          fi
           cp -R "$APP_DIR" Payload/
           zip -r loan-helper-unsigned.ipa Payload/
           rm -rf Payload
@@ -75,4 +77,3 @@ jobs:
         with:
           name: loan-helper-ipa
           path: ./*.ipa
-
