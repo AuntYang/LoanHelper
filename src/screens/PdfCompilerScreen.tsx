@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+ï»¿import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import * as Sharing from 'expo-sharing';
@@ -29,7 +29,7 @@ export default function PdfCompilerScreen() {
 
   if (!c) return <View style={s.center}><ActivityIndicator size="large" color={Colors.primary} /></View>;
 
-  // °´ PDF Ë³ĞòÁĞ×ÊÁÏÇåµ¥
+  // æŒ‰ PDF é¡ºåºåˆ—èµ„æ–™æ¸…å•
   const docOrderCheck = DocOrder.map(t => ({
     type: t,
     label: DocTypeLabels[t],
@@ -41,11 +41,11 @@ export default function PdfCompilerScreen() {
 
   const handleCompile = async () => {
     if (totalDocs === 0) {
-      Alert.alert('×ÊÁÏ²»×ã', 'ÇëÏÈÅÄÉã×ÊÁÏ');
+      Alert.alert('èµ„æ–™ä¸è¶³', 'è¯·å…ˆæ‹æ‘„èµ„æ–™');
       return;
     }
     if (!hasInfo) {
-      Alert.alert('ĞÅÏ¢²»×ã', '½¨ÒéÏÈÌáÈ¡¿Í»§ĞÅÏ¢');
+      Alert.alert('ä¿¡æ¯ä¸è¶³', 'å»ºè®®å…ˆæå–å®¢æˆ·ä¿¡æ¯');
       return;
     }
 
@@ -54,9 +54,9 @@ export default function PdfCompilerScreen() {
       const uri = await compileFinalPdf(c);
       await updateCasePdf(c.id, uri);
       setPdfUri(uri);
-      Alert.alert('±àÒë³É¹¦', 'ÉóÅú×ÊÁÏ PDF ÒÑÉú³É');
+      Alert.alert('ç¼–è¯‘æˆåŠŸ', 'å®¡æ‰¹èµ„æ–™ PDF å·²ç”Ÿæˆ');
     } catch (e: any) {
-      Alert.alert('±àÒëÊ§°Ü', e.message);
+      Alert.alert('ç¼–è¯‘å¤±è´¥', e.message);
     }
     setCompiling(false);
   };
@@ -66,23 +66,23 @@ export default function PdfCompilerScreen() {
     try {
       await Sharing.shareAsync(pdfUri, { mimeType: 'application/pdf' });
     } catch {
-      Alert.alert('·ÖÏíÊ§°Ü');
+      Alert.alert('åˆ†äº«å¤±è´¥');
     }
   };
 
   return (
     <ScrollView style={s.container}>
-      {/* ±àÒë¸ÅÀÀ */}
+      {/* ç¼–è¯‘æ¦‚è§ˆ */}
       <View style={s.summary}>
-        <Text style={s.summaryTitle}>ÉóÅú×ÊÁÏ±àÒë</Text>
+        <Text style={s.summaryTitle}>å®¡æ‰¹èµ„æ–™ç¼–è¯‘</Text>
         <Text style={s.summaryDesc}>
-          ½«°´ÒÔÏÂË³ĞòºÏ²¢ÎªÒ»·İ PDF£º{'\n'}
-          ·âÃæ ¡ú ¾¡Ö°µ÷²éĞÅÏ¢±í ¡ú ÓªÒµÖ´ÕÕ ¡ú ¿Í»§Éí·İÖ¤ ¡ú ÅäÅ¼Éí·İÖ¤ ¡ú ½á»éÖ¤ ¡ú »§¿Ú±¾ ¡ú ·¿²úÖ¤Ã÷ ¡ú ×âÁŞºÏÍ¬ ¡ú Õ÷ĞÅ±¨¸æ ¡ú Ç©×Ö¸ñÊ½ÎÄ±¾ ¡ú ÉÏÃÅÕÕÆ¬ ¡ú ´æ»õÖ¤Ã÷ ¡ú ÆäËû
+          å°†æŒ‰ä»¥ä¸‹é¡ºåºåˆå¹¶ä¸ºä¸€ä»½ PDFï¼š{'\n'}
+          å°é¢ â†’ å°½èŒè°ƒæŸ¥ä¿¡æ¯è¡¨ â†’ è¥ä¸šæ‰§ç…§ â†’ å®¢æˆ·èº«ä»½è¯ â†’ é…å¶èº«ä»½è¯ â†’ ç»“å©šè¯ â†’ æˆ·å£æœ¬ â†’ æˆ¿äº§è¯æ˜ â†’ ç§ŸèµåˆåŒ â†’ å¾ä¿¡æŠ¥å‘Š â†’ ç­¾å­—æ ¼å¼æ–‡æœ¬ â†’ ä¸Šé—¨ç…§ç‰‡ â†’ å­˜è´§è¯æ˜ â†’ å…¶ä»–
         </Text>
       </View>
 
-      {/* ×ÊÁÏÇåµ¥¼ì²é */}
-      <Text style={s.secTitle}>×ÊÁÏÍêÕûĞÔ</Text>
+      {/* èµ„æ–™æ¸…å•æ£€æŸ¥ */}
+      <Text style={s.secTitle}>èµ„æ–™å®Œæ•´æ€§</Text>
       <View style={s.checkGrid}>
         {docOrderCheck.map(d => (
           <View key={d.type} style={[s.checkItem, d.count > 0 && s.checkItemDone]}>
@@ -90,29 +90,29 @@ export default function PdfCompilerScreen() {
               {d.count > 0 ? '?' : '?'}
             </Text>
             <Text style={[s.checkLabel, d.count > 0 && { color: Colors.text, fontWeight: '600' }]}>{d.label}</Text>
-            <Text style={s.checkCount}>{d.count}·İ</Text>
+            <Text style={s.checkCount}>{d.count}ä»½</Text>
           </View>
         ))}
       </View>
 
-      {/* ÒÑÌáÈ¡ĞÅÏ¢×´Ì¬ */}
-      <Text style={s.secTitle}>ĞÅÏ¢ÌáÈ¡×´Ì¬</Text>
+      {/* å·²æå–ä¿¡æ¯çŠ¶æ€ */}
+      <Text style={s.secTitle}>ä¿¡æ¯æå–çŠ¶æ€</Text>
       <View style={s.infoStatus}>
         <Text style={s.infoStatusIcon}>{hasInfo ? '?' : '??'}</Text>
         <View style={s.infoStatusText}>
           <Text style={s.infoStatusLabel}>
-            {hasInfo ? '¿Í»§ĞÅÏ¢ÒÑÌáÈ¡' : 'ÉĞÎ´ÌáÈ¡¿Í»§ĞÅÏ¢'}
+            {hasInfo ? 'å®¢æˆ·ä¿¡æ¯å·²æå–' : 'å°šæœªæå–å®¢æˆ·ä¿¡æ¯'}
           </Text>
           {hasInfo && (
             <Text style={s.infoStatusDetail}>
               {c.extractedInfo.name} / {c.extractedInfo.idNumber}
-              {c.extractedInfo.spouseName ? ` / ÅäÅ¼:${c.extractedInfo.spouseName}` : ''}
+              {c.extractedInfo.spouseName ? ` / é…å¶:${c.extractedInfo.spouseName}` : ''}
             </Text>
           )}
         </View>
       </View>
 
-      {/* ²Ù×÷°´Å¥ */}
+      {/* æ“ä½œæŒ‰é’® */}
       <View style={s.actions}>
         <TouchableOpacity
           style={[s.compileBtn, compiling && { opacity: 0.6 }]}
@@ -125,7 +125,7 @@ export default function PdfCompilerScreen() {
             <>
               <Text style={s.compileBtnIcon}>??</Text>
               <Text style={s.compileBtnText}>
-                {pdfUri ? 'ÖØĞÂ±àÒë PDF' : '±àÒëÍêÕûÉóÅú×ÊÁÏ PDF'}
+                {pdfUri ? 'é‡æ–°ç¼–è¯‘ PDF' : 'ç¼–è¯‘å®Œæ•´å®¡æ‰¹èµ„æ–™ PDF'}
               </Text>
             </>
           )}
@@ -135,11 +135,11 @@ export default function PdfCompilerScreen() {
           <>
             <View style={s.successCard}>
               <Text style={s.successIcon}>?</Text>
-              <Text style={s.successText}>PDF ÒÑÉú³É</Text>
-              <Text style={s.successDetail}>{totalDocs}·İ×ÊÁÏÒÑ°´ĞòºÏ¸å</Text>
+              <Text style={s.successText}>PDF å·²ç”Ÿæˆ</Text>
+              <Text style={s.successDetail}>{totalDocs}ä»½èµ„æ–™å·²æŒ‰åºåˆç¨¿</Text>
             </View>
             <TouchableOpacity style={s.shareBtn} onPress={handleShare}>
-              <Text style={s.shareBtnText}>?? ·ÖÏí/µ¼³ö PDF</Text>
+              <Text style={s.shareBtnText}>?? åˆ†äº«/å¯¼å‡º PDF</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={s.doneBtn}
@@ -148,17 +148,17 @@ export default function PdfCompilerScreen() {
                 nav.goBack();
               }}
             >
-              <Text style={s.doneBtnText}>Íê³É£¬·µ»Ø°¸¼şÏêÇé</Text>
+              <Text style={s.doneBtnText}>å®Œæˆï¼Œè¿”å›æ¡ˆä»¶è¯¦æƒ…</Text>
             </TouchableOpacity>
           </>
         ) : (
           <View style={s.tipCard}>
             <Text style={s.tipText}>
-              ±àÒëºó½«Éú³Éº¬ÒÔÏÂÄÚÈİµÄ PDF£º{'\n'}
-              ¢Ù ·âÃæ£¨¿Í»§ĞÕÃû+ÈÕÆÚ£©{'\n'}
-              ¢Ú ¾¡Ö°µ÷²éĞÅÏ¢±í£¨ÌáÈ¡µÄĞÅÏ¢»ã×Ü£©{'\n'}
-              ¢Û ×ÊÁÏÕıÎÄ£¨°´ĞòÅÅÁĞËùÓĞÕÕÆ¬£©{'\n\n'}
-              Éú³Éºó¿ÉÍ¨¹ı·ÖÏíµ¼³öµ½µçÄÔ´òÓ¡¡¢Ìá½»¡£
+              ç¼–è¯‘åå°†ç”Ÿæˆå«ä»¥ä¸‹å†…å®¹çš„ PDFï¼š{'\n'}
+              â‘  å°é¢ï¼ˆå®¢æˆ·å§“å+æ—¥æœŸï¼‰{'\n'}
+              â‘¡ å°½èŒè°ƒæŸ¥ä¿¡æ¯è¡¨ï¼ˆæå–çš„ä¿¡æ¯æ±‡æ€»ï¼‰{'\n'}
+              â‘¢ èµ„æ–™æ­£æ–‡ï¼ˆæŒ‰åºæ’åˆ—æ‰€æœ‰ç…§ç‰‡ï¼‰{'\n\n'}
+              ç”Ÿæˆåå¯é€šè¿‡åˆ†äº«å¯¼å‡ºåˆ°ç”µè„‘æ‰“å°ã€æäº¤ã€‚
             </Text>
           </View>
         )}

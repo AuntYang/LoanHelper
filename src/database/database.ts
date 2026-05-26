@@ -1,4 +1,4 @@
-import * as SQLite from 'expo-sqlite';
+ï»¿import * as SQLite from 'expo-sqlite';
 import { LoanCase, DocumentRecord, DocType, DocOrder, ExtractedInfo, defaultExtractedInfo } from '../models/types';
 
 let db: SQLite.SQLiteDatabase;
@@ -32,7 +32,7 @@ function genId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
 }
 
-// ===== °¸¼þ CRUD =====
+// ===== æ¡ˆä»¶ CRUD =====
 export async function createCase(clientName: string): Promise<string> {
   const id = genId();
   const now = new Date().toISOString();
@@ -80,7 +80,7 @@ export async function deleteCase(caseId: string): Promise<void> {
   await db.runAsync('DELETE FROM loan_cases WHERE id = ?', [caseId]);
 }
 
-// ===== ÎÄµµ CRUD =====
+// ===== æ–‡æ¡£ CRUD =====
 export async function addDocument(caseId: string, type: DocType, uri: string, fileName: string): Promise<DocumentRecord> {
   const id = genId();
   const now = new Date().toISOString();
@@ -106,7 +106,7 @@ export async function deleteDocument(docId: string): Promise<void> {
   await db.runAsync('DELETE FROM documents WHERE id = ?', [docId]);
 }
 
-// ===== ¸¨Öú =====
+// ===== è¾…åŠ© =====
 async function rowToCase(row: any): Promise<LoanCase> {
   const docs = await getDocuments(row.id);
   return {

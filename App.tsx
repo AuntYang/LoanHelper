@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+ï»¿import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import AppNavigator from './src/navigation/AppNavigator';
@@ -12,7 +12,7 @@ export default function App() {
     initDatabase().then(() => setReady(true)).catch(e => setErr(e.message));
   }, []);
 
-  if (err) return <View style={s.center}><Text style={{ color: '#ea4335' }}>³õÊ¼»¯Ê§°Ü: {err}</Text></View>;
+  if (err) return <View style={s.center}><Text style={{ color: '#ea4335' }}>åˆå§‹åŒ–å¤±è´¥: {err}</Text></View>;
   if (!ready) return <View style={s.center}><ActivityIndicator size="large" color="#1a73e8" /></View>;
 
   return <><StatusBar style="light" /><AppNavigator /></>;

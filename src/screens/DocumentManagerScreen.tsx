@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+ï»¿import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Alert, Modal } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
@@ -12,7 +12,7 @@ import { getDocuments, addDocument, deleteDocument } from '../database/database'
 type Nav = NativeStackNavigationProp<RootStackParamList, 'DocumentManager'>;
 type Route = RouteProp<RootStackParamList, 'DocumentManager'>;
 
-// °´ PDF Ë³ĞòÏÔÊ¾µÄ¿ì½İ±êÇ©
+// æŒ‰ PDF é¡ºåºæ˜¾ç¤ºçš„å¿«æ·æ ‡ç­¾
 const quickTypes: DocType[] = [
   'business_license', 'id_card_client', 'id_card_spouse',
   'marriage_cert', 'household_register', 'property_cert',
@@ -71,13 +71,13 @@ export default function DocumentManagerScreen() {
   };
 
   const handleDelete = (doc: DocumentRecord) => {
-    Alert.alert('É¾³ı', `É¾³ıÕâ·İ${DocTypeLabels[doc.type]}£¿`, [
-      { text: 'È¡Ïû', style: 'cancel' },
-      { text: 'É¾³ı', style: 'destructive', onPress: async () => { await deleteDocument(doc.id); loadDocs(); }},
+    Alert.alert('åˆ é™¤', `åˆ é™¤è¿™ä»½${DocTypeLabels[doc.type]}ï¼Ÿ`, [
+      { text: 'å–æ¶ˆ', style: 'cancel' },
+      { text: 'åˆ é™¤', style: 'destructive', onPress: async () => { await deleteDocument(doc.id); loadDocs(); }},
     ]);
   };
 
-  // °´PDFË³Ğò·Ö×éÏÔÊ¾
+  // æŒ‰PDFé¡ºåºåˆ†ç»„æ˜¾ç¤º
   const groupedDocs = DocOrder.map(t => ({
     type: t,
     label: DocTypeLabels[t],
@@ -86,7 +86,7 @@ export default function DocumentManagerScreen() {
 
   return (
     <View style={s.container}>
-      {/* ¿ì½İÅÄÉã±êÇ© */}
+      {/* å¿«æ·æ‹æ‘„æ ‡ç­¾ */}
       <View style={s.quickRow}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {quickTypes.map(t => (
@@ -101,10 +101,10 @@ export default function DocumentManagerScreen() {
       </View>
 
       <TouchableOpacity style={s.importBtn} onPress={handlePickFromLibrary}>
-        <Text style={s.importBtnText}>?? ´ÓÎÄ¼ş/Ïà²áµ¼Èë</Text>
+        <Text style={s.importBtnText}>?? ä»æ–‡ä»¶/ç›¸å†Œå¯¼å…¥</Text>
       </TouchableOpacity>
 
-      <Text style={s.secTitle}>ÒÑÅÄÉã×ÊÁÏ£¨{docs.length}·İ£©</Text>
+      <Text style={s.secTitle}>å·²æ‹æ‘„èµ„æ–™ï¼ˆ{docs.length}ä»½ï¼‰</Text>
       <ScrollView style={s.list}>
         {groupedDocs.map(group => (
           <View key={group.type}>
@@ -120,10 +120,10 @@ export default function DocumentManagerScreen() {
             ))}
           </View>
         ))}
-        {docs.length === 0 && <Text style={s.empty}>µã»÷ÉÏ·½±êÇ©¿ìËÙÅÄÉã£¬»ò´ÓÎÄ¼şµ¼Èë</Text>}
+        {docs.length === 0 && <Text style={s.empty}>ç‚¹å‡»ä¸Šæ–¹æ ‡ç­¾å¿«é€Ÿæ‹æ‘„ï¼Œæˆ–ä»æ–‡ä»¶å¯¼å…¥</Text>}
       </ScrollView>
 
-      {/* Ïà»ú */}
+      {/* ç›¸æœº */}
       {showCamera && (
         <Modal animationType="slide" visible={showCamera} onRequestClose={() => setShowCamera(false)}>
           <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing="back">
@@ -141,11 +141,11 @@ export default function DocumentManagerScreen() {
         </Modal>
       )}
 
-      {/* ÅÄÕÕºó¿ìËÙÑ¡ÔñÀàĞÍ */}
+      {/* æ‹ç…§åå¿«é€Ÿé€‰æ‹©ç±»å‹ */}
       <Modal visible={showQuickCapture} transparent animationType="fade">
         <View style={s.overlay}>
           <View style={s.dialog}>
-            <Text style={s.dialogTitle}>±£´æÎªÄÄÀà×ÊÁÏ£¿</Text>
+            <Text style={s.dialogTitle}>ä¿å­˜ä¸ºå“ªç±»èµ„æ–™ï¼Ÿ</Text>
             <ScrollView style={{ maxHeight: 300 }}>
               {quickTypes.map(t => (
                 <TouchableOpacity key={t} style={[s.typeRow, selectedType === t && s.typeRowActive]} onPress={() => setSelectedType(t)}>
@@ -156,21 +156,21 @@ export default function DocumentManagerScreen() {
             </ScrollView>
             <View style={s.dialogActions}>
               <TouchableOpacity onPress={() => { setShowQuickCapture(false); setPendingUri(null); }}>
-                <Text style={{ color: Colors.textSecondary }}>È¡Ïû</Text>
+                <Text style={{ color: Colors.textSecondary }}>å–æ¶ˆ</Text>
               </TouchableOpacity>
               <TouchableOpacity style={s.saveBtn} onPress={() => saveDoc(selectedType)}>
-                <Text style={{ color: '#fff', fontWeight: '600' }}>±£´æ</Text>
+                <Text style={{ color: '#fff', fontWeight: '600' }}>ä¿å­˜</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
 
-      {/* ´ÓÎÄ¼şµ¼ÈëºóÑ¡ÀàĞÍ */}
+      {/* ä»æ–‡ä»¶å¯¼å…¥åé€‰ç±»å‹ */}
       <Modal visible={showTypePicker} transparent animationType="fade">
         <View style={s.overlay}>
           <View style={s.dialog}>
-            <Text style={s.dialogTitle}>Ñ¡Ôñ×ÊÁÏÀàĞÍ</Text>
+            <Text style={s.dialogTitle}>é€‰æ‹©èµ„æ–™ç±»å‹</Text>
             <ScrollView style={{ maxHeight: 350 }}>
               {DocOrder.filter(t => t !== 'cover' && t !== 'due_diligence').map(t => (
                 <TouchableOpacity key={t} style={[s.typeRow, selectedType === t && s.typeRowActive]} onPress={() => setSelectedType(t)}>
@@ -181,10 +181,10 @@ export default function DocumentManagerScreen() {
             </ScrollView>
             <View style={s.dialogActions}>
               <TouchableOpacity onPress={() => { setShowTypePicker(false); setPendingUri(null); }}>
-                <Text style={{ color: Colors.textSecondary }}>È¡Ïû</Text>
+                <Text style={{ color: Colors.textSecondary }}>å–æ¶ˆ</Text>
               </TouchableOpacity>
               <TouchableOpacity style={s.saveBtn} onPress={() => saveDoc(selectedType)}>
-                <Text style={{ color: '#fff', fontWeight: '600' }}>±£´æ</Text>
+                <Text style={{ color: '#fff', fontWeight: '600' }}>ä¿å­˜</Text>
               </TouchableOpacity>
             </View>
           </View>

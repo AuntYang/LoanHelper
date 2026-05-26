@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+ï»¿import React, { useCallback, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Alert, Modal } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -36,23 +36,23 @@ export default function HomeScreen() {
       <View style={s.stats}>
         <View style={[s.statCard, { backgroundColor: '#e3f2fd' }]}>
           <Text style={s.statNum}>{cases.length}</Text>
-          <Text style={s.statLabel}>È«²¿°¸¼ş</Text>
+          <Text style={s.statLabel}>å…¨éƒ¨æ¡ˆä»¶</Text>
         </View>
         <View style={[s.statCard, { backgroundColor: '#fff3e0' }]}>
           <Text style={s.statNum}>{processing}</Text>
-          <Text style={s.statLabel}>´¦ÀíÖĞ</Text>
+          <Text style={s.statLabel}>å¤„ç†ä¸­</Text>
         </View>
         <View style={[s.statCard, { backgroundColor: '#e8f5e9' }]}>
           <Text style={s.statNum}>{completed}</Text>
-          <Text style={s.statLabel}>ÒÑÍê³É</Text>
+          <Text style={s.statLabel}>å·²å®Œæˆ</Text>
         </View>
       </View>
 
       <TouchableOpacity style={s.newBtn} onPress={() => setShowNew(true)}>
-        <Text style={s.newBtnText}>+ ĞÂ½¨´û¿î°¸¼ş</Text>
+        <Text style={s.newBtnText}>+ æ–°å»ºè´·æ¬¾æ¡ˆä»¶</Text>
       </TouchableOpacity>
 
-      <Text style={s.sectionTitle}>°¸¼şÁĞ±í</Text>
+      <Text style={s.sectionTitle}>æ¡ˆä»¶åˆ—è¡¨</Text>
       <FlatList
         data={cases}
         keyExtractor={c => c.id}
@@ -61,32 +61,32 @@ export default function HomeScreen() {
             <View style={s.cardLeft}>
               <Text style={s.cardName}>{item.clientName}</Text>
               <Text style={s.cardMeta}>
-                ×ÊÁÏ {item.documents.length} ·İ | {new Date(item.createdAt).toLocaleDateString('zh-CN')}
+                èµ„æ–™ {item.documents.length} ä»½ | {new Date(item.createdAt).toLocaleDateString('zh-CN')}
               </Text>
             </View>
             <View style={[s.badge, { backgroundColor: item.status === 'completed' ? '#e8f5e9' : '#fff3e0' }]}>
               <Text style={[s.badgeText, { color: item.status === 'completed' ? '#2e7d32' : '#e65100' }]}>
-                {item.status === 'completed' ? 'ÒÑÍê³É' : '´¦ÀíÖĞ'}
+                {item.status === 'completed' ? 'å·²å®Œæˆ' : 'å¤„ç†ä¸­'}
               </Text>
             </View>
           </TouchableOpacity>
         )}
         ListEmptyComponent={
-          <Text style={s.empty}>ÔİÎŞ°¸¼ş£¬µã»÷ÉÏ·½°´Å¥ĞÂ½¨</Text>
+          <Text style={s.empty}>æš‚æ— æ¡ˆä»¶ï¼Œç‚¹å‡»ä¸Šæ–¹æŒ‰é’®æ–°å»º</Text>
         }
       />
 
       <Modal visible={showNew} transparent animationType="fade">
         <View style={s.overlay}>
           <View style={s.dialog}>
-            <Text style={s.dialogTitle}>ĞÂ½¨´û¿î°¸¼ş</Text>
-            <TextInput style={s.dialogInput} value={newName} onChangeText={setNewName} placeholder="ÊäÈë¿Í»§ĞÕÃû" placeholderTextColor={Colors.textLight} autoFocus />
+            <Text style={s.dialogTitle}>æ–°å»ºè´·æ¬¾æ¡ˆä»¶</Text>
+            <TextInput style={s.dialogInput} value={newName} onChangeText={setNewName} placeholder="è¾“å…¥å®¢æˆ·å§“å" placeholderTextColor={Colors.textLight} autoFocus />
             <View style={s.dialogActions}>
               <TouchableOpacity onPress={() => { setShowNew(false); setNewName(''); }}>
-                <Text style={s.cancelText}>È¡Ïû</Text>
+                <Text style={s.cancelText}>å–æ¶ˆ</Text>
               </TouchableOpacity>
               <TouchableOpacity style={s.confirmBtn} onPress={handleCreate}>
-                <Text style={s.confirmText}>´´½¨</Text>
+                <Text style={s.confirmText}>åˆ›å»º</Text>
               </TouchableOpacity>
             </View>
           </View>

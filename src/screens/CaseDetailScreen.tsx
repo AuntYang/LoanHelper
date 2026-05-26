@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+ï»¿import React, { useCallback, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl, Alert } from 'react-native';
 import { useFocusEffect, useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -17,11 +17,11 @@ export default function CaseDetailScreen() {
   const load = useCallback(async () => setC(await getCase(route.params.caseId)), [route.params.caseId]);
   useFocusEffect(useCallback(() => { load(); }, [load]));
 
-  if (!c) return <View style={s.center}><Text style={{ color: Colors.textSecondary }}>¼ÓÔØÖĞ...</Text></View>;
+  if (!c) return <View style={s.center}><Text style={{ color: Colors.textSecondary }}>åŠ è½½ä¸­...</Text></View>;
 
   const info = c.extractedInfo;
 
-  // °´PDFÅÅÁĞË³ĞòÍ³¼Æ
+  // æŒ‰PDFæ’åˆ—é¡ºåºç»Ÿè®¡
   const docStats = DocOrder.map(t => ({
     type: t,
     label: DocTypeLabels[t],
@@ -33,63 +33,63 @@ export default function CaseDetailScreen() {
 
   return (
     <ScrollView style={s.container} refreshControl={<RefreshControl refreshing={false} onRefresh={load} />}>
-      {/* Í·²¿ĞÅÏ¢ */}
+      {/* å¤´éƒ¨ä¿¡æ¯ */}
       <View style={s.header}>
         <Text style={s.clientName}>{c.clientName}</Text>
         <View style={[s.badge, { backgroundColor: c.status === 'completed' ? '#e8f5e9' : '#fff3e0' }]}>
           <Text style={[s.badgeText, { color: c.status === 'completed' ? '#2e7d32' : '#e65100' }]}>
-            {c.status === 'completed' ? 'ÒÑÍê³É' : '´¦ÀíÖĞ'}
+            {c.status === 'completed' ? 'å·²å®Œæˆ' : 'å¤„ç†ä¸­'}
           </Text>
         </View>
       </View>
 
-      {/* ²Ù×÷Á÷³Ì */}
-      <Text style={s.secTitle}>¹¤×÷Á÷³Ì</Text>
+      {/* æ“ä½œæµç¨‹ */}
+      <Text style={s.secTitle}>å·¥ä½œæµç¨‹</Text>
       <View style={s.workflow}>
-        <Step icon={c.documents.length > 0 ? '?' : '??'} label="ÅÄÉã/µ¼Èë×ÊÁÏ" desc={c.documents.length > 0 ? `ÒÑÅÄ ${c.documents.length} ·İ` : 'µã»÷¿ªÊ¼ÊÕ¼¯×ÊÁÏ'} onPress={() => nav.navigate('DocumentManager', { caseId: c.id })} />
-        <Step icon={hasInfo ? '?' : '??'} label="ÌáÈ¡¿Í»§ĞÅÏ¢" desc={hasInfo ? `${info.name} / ${info.idNumber}` : '´ÓÉí·İÖ¤OCRÌáÈ¡»òÊÖ¶¯Â¼Èë'} onPress={() => nav.navigate('InfoExtractor', { caseId: c.id })} />
-        <Step icon={hasPdf ? '?' : '??'} label="±àÒëÉóÅúPDF" desc={hasPdf ? 'ÒÑÉú³É£¬¿ÉÖØĞÂ±àÒë' : `${c.documents.length}·İ×ÊÁÏ ¡ú °´ĞòºÏ¸å`} onPress={() => nav.navigate('PdfCompiler', { caseId: c.id })} />
+        <Step icon={c.documents.length > 0 ? '?' : '??'} label="æ‹æ‘„/å¯¼å…¥èµ„æ–™" desc={c.documents.length > 0 ? `å·²æ‹ ${c.documents.length} ä»½` : 'ç‚¹å‡»å¼€å§‹æ”¶é›†èµ„æ–™'} onPress={() => nav.navigate('DocumentManager', { caseId: c.id })} />
+        <Step icon={hasInfo ? '?' : '??'} label="æå–å®¢æˆ·ä¿¡æ¯" desc={hasInfo ? `${info.name} / ${info.idNumber}` : 'ä»èº«ä»½è¯OCRæå–æˆ–æ‰‹åŠ¨å½•å…¥'} onPress={() => nav.navigate('InfoExtractor', { caseId: c.id })} />
+        <Step icon={hasPdf ? '?' : '??'} label="ç¼–è¯‘å®¡æ‰¹PDF" desc={hasPdf ? 'å·²ç”Ÿæˆï¼Œå¯é‡æ–°ç¼–è¯‘' : `${c.documents.length}ä»½èµ„æ–™ â†’ æŒ‰åºåˆç¨¿`} onPress={() => nav.navigate('PdfCompiler', { caseId: c.id })} />
       </View>
 
-      {/* ×ÊÁÏÇåµ¥£¨°´PDFË³ĞòÏÔÊ¾£© */}
-      <Text style={s.secTitle}>×ÊÁÏÇåµ¥£¨{c.documents.length}·İ£©</Text>
+      {/* èµ„æ–™æ¸…å•ï¼ˆæŒ‰PDFé¡ºåºæ˜¾ç¤ºï¼‰ */}
+      <Text style={s.secTitle}>èµ„æ–™æ¸…å•ï¼ˆ{c.documents.length}ä»½ï¼‰</Text>
       <View style={s.docGrid}>
         {docStats.map(d => (
           <View key={d.type} style={[s.docTypeCard, d.count > 0 && s.docTypeCardHas]}>
             <Text style={[s.docTypeLabel, d.count > 0 && { color: Colors.text, fontWeight: '600' }]}>{d.label}</Text>
-            <Text style={[s.docTypeCount, d.count > 0 && { color: Colors.primary }]}>{d.count}·İ</Text>
+            <Text style={[s.docTypeCount, d.count > 0 && { color: Colors.primary }]}>{d.count}ä»½</Text>
           </View>
         ))}
       </View>
 
-      {/* ĞÅÏ¢ÕªÒª */}
+      {/* ä¿¡æ¯æ‘˜è¦ */}
       {hasInfo && (
         <>
-          <Text style={s.secTitle}>ÒÑÌáÈ¡ĞÅÏ¢</Text>
+          <Text style={s.secTitle}>å·²æå–ä¿¡æ¯</Text>
           <View style={s.infoCard}>
-            <InfoLine label="¿Í»§ĞÕÃû" value={info.name} />
-            <InfoLine label="Éí·İÖ¤ºÅ" value={info.idNumber} />
-            <InfoLine label="ÊÖ»úºÅ" value={info.phone} />
-            <InfoLine label="ÅäÅ¼" value={info.spouseName || '-'} />
-            <InfoLine label="ÓªÒµÖ´ÕÕ" value={info.companyName || '-'} />
+            <InfoLine label="å®¢æˆ·å§“å" value={info.name} />
+            <InfoLine label="èº«ä»½è¯å·" value={info.idNumber} />
+            <InfoLine label="æ‰‹æœºå·" value={info.phone} />
+            <InfoLine label="é…å¶" value={info.spouseName || '-'} />
+            <InfoLine label="è¥ä¸šæ‰§ç…§" value={info.companyName || '-'} />
           </View>
         </>
       )}
 
-      {/* µ×²¿°´Å¥ */}
+      {/* åº•éƒ¨æŒ‰é’® */}
       <View style={s.bottom}>
         {c.status === 'processing' && hasPdf && (
           <TouchableOpacity style={s.actionBtn} onPress={() => {}}>
-            <Text style={s.actionBtnText}>? ÒÑÍê³É ¡ª ²é¿´PDF</Text>
+            <Text style={s.actionBtnText}>? å·²å®Œæˆ â€” æŸ¥çœ‹PDF</Text>
           </TouchableOpacity>
         )}
         <TouchableOpacity style={s.deleteBtn} onPress={() => {
-          Alert.alert('É¾³ı°¸¼ş', 'È·¶¨É¾³ı£¿ËùÓĞ×ÊÁÏ½«¶ªÊ§¡£', [
-            { text: 'È¡Ïû', style: 'cancel' },
-            { text: 'É¾³ı', style: 'destructive', onPress: async () => { await deleteCase(c.id); nav.goBack(); }},
+          Alert.alert('åˆ é™¤æ¡ˆä»¶', 'ç¡®å®šåˆ é™¤ï¼Ÿæ‰€æœ‰èµ„æ–™å°†ä¸¢å¤±ã€‚', [
+            { text: 'å–æ¶ˆ', style: 'cancel' },
+            { text: 'åˆ é™¤', style: 'destructive', onPress: async () => { await deleteCase(c.id); nav.goBack(); }},
           ]);
         }}>
-          <Text style={s.deleteBtnText}>É¾³ı°¸¼ş</Text>
+          <Text style={s.deleteBtnText}>åˆ é™¤æ¡ˆä»¶</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

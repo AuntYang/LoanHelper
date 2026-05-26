@@ -1,4 +1,4 @@
-import React from 'react';
+锘縤mport React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../models/types';
@@ -20,11 +20,11 @@ export default function AppNavigator() {
         headerTitleStyle: { fontWeight: '600' },
         contentStyle: { backgroundColor: Colors.background },
       }}>
-        <Stack.Screen name="Home" component={HomeScreen} options={{ title: '贷款助手' }} />
-        <Stack.Screen name="CaseDetail" component={CaseDetailScreen} options={{ title: '案件详情' }} />
-        <Stack.Screen name="DocumentManager" component={DocumentManagerScreen} options={{ title: '资料管理' }} />
-        <Stack.Screen name="InfoExtractor" component={InfoExtractorScreen} options={{ title: '信息提取' }} />
-        <Stack.Screen name="PdfCompiler" component={PdfCompilerScreen} options={{ title: '编译PDF' }} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ title: '璐锋鍔╂墜' }} />
+        <Stack.Screen name="CaseDetail" component={CaseDetailScreen} options={{ title: '妗堜欢璇︽儏' }} />
+        <Stack.Screen name="DocumentManager" component={DocumentManagerScreen} options={{ title: '璧勬枡绠＄悊' }} />
+        <Stack.Screen name="InfoExtractor" component={InfoExtractorScreen} options={{ title: '淇℃伅鎻愬彇' }} />
+        <Stack.Screen name="PdfCompiler" component={PdfCompilerScreen} options={{ title: '缂栬瘧PDF' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

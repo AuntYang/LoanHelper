@@ -1,6 +1,6 @@
-{
+﻿{
   "expo": {
-    "name": "��������",
+    "name": "锟斤拷锟斤拷锟斤拷锟斤拷",
     "slug": "loan-helper",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,9 +13,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.loanhelper.app",
       "infoPlist": {
-        "NSCameraUsageDescription": "��Ҫ���Ȩ����ɨ������֤��Ӫҵִ�յȴ�������",
-        "NSPhotoLibraryUsageDescription": "��Ҫ���Ȩ��������ͻ�����ͼƬ",
-        "NSPhotoLibraryAddUsageDescription": "��Ҫ�������ϵ����",
+        "NSCameraUsageDescription": "锟斤拷要锟斤拷锟饺拷锟斤拷锟缴拷锟斤拷锟斤拷锟街わ拷锟接抵达拷盏却锟斤拷锟斤拷锟斤拷锟?,
+        "NSPhotoLibraryUsageDescription": "锟斤拷要锟斤拷锟饺拷锟斤拷锟斤拷锟斤拷锟酵伙拷锟斤拷锟斤拷图片",
+        "NSPhotoLibraryAddUsageDescription": "锟斤拷要锟斤拷锟斤拷锟斤拷锟较碉拷锟斤拷锟?,
         "ITSAppUsesNonExemptEncryption": false
       }
     },
