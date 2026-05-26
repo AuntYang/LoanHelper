@@ -1,10 +1,7 @@
-锘縩ame: Build IPA (unsigned, sign with iLoader)
+﻿閿樼俯ame: Build IPA (unsigned, sign with iLoader)
 
 on:
-  workflow_dispatch:  # 鎵嬪姩瑙﹀彂
-  push:
-    branches: [master]
-
+  workflow_dispatch:  # 閹靛濮╃憴锕€褰?
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   GIT_TERMINAL_PROMPT: "0"
@@ -77,3 +74,4 @@ jobs:
         with:
           name: loan-helper-ipa
           path: ./*.ipa
+
