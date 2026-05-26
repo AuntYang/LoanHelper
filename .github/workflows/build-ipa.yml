@@ -1,4 +1,4 @@
-﻿锘縩ame: Build IPA (unsigned, sign with iLoader)
+锘縩ame: Build IPA (unsigned, sign with iLoader)
 
 on:
   workflow_dispatch:  # 鎵嬪姩瑙﹀彂

@@ -1,4 +1,4 @@
-﻿import * as Print from 'expo-print';
+import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
 import { LoanCase, DocTypeLabels, DocOrder, DocumentRecord, ExtractedInfo, infoGroups } from '../models/types';
 

@@ -1,4 +1,4 @@
-﻿import { ExtractedInfo } from '../models/types';
+import { ExtractedInfo } from '../models/types';
 
 /**
  * 从OCR文本中提取客户+配偶+经营信息

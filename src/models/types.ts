@@ -1,4 +1,4 @@
-﻿// 资料类型（按最终PDF排列顺序）
+// 资料类型（按最终PDF排列顺序）
 export type DocType =
   | 'cover'               // 封面
   | 'due_diligence'       // 尽职调查信息表

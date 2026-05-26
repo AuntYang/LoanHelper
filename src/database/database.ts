@@ -1,4 +1,4 @@
-﻿import * as SQLite from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite';
 import { LoanCase, DocumentRecord, DocType, DocOrder, ExtractedInfo, defaultExtractedInfo } from '../models/types';
 
 let db: SQLite.SQLiteDatabase;
