@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "锟斤拷锟斤拷锟斤拷锟斤拷",
+    "name": "贷款助手",
     "slug": "loan-helper",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,9 +13,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.loanhelper.app",
       "infoPlist": {
-        "NSCameraUsageDescription": "锟斤拷要锟斤拷锟饺拷锟斤拷锟缴拷锟斤拷锟斤拷锟街わ拷锟接抵达拷盏却锟斤拷锟斤拷锟斤拷锟?,
-        "NSPhotoLibraryUsageDescription": "锟斤拷要锟斤拷锟饺拷锟斤拷锟斤拷锟斤拷锟酵伙拷锟斤拷锟斤拷图片",
-        "NSPhotoLibraryAddUsageDescription": "锟斤拷要锟斤拷锟斤拷锟斤拷锟较碉拷锟斤拷锟?,
+        "NSCameraUsageDescription": "需要相机权限来扫描身份证、营业执照等贷款资料",
+        "NSPhotoLibraryUsageDescription": "需要相册权限来选择客户已有的图片",
+        "NSPhotoLibraryAddUsageDescription": "需要权限来保存资料照片",
         "ITSAppUsesNonExemptEncryption": false
       }
     },
