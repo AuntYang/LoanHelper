@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Alert, Mod
 import { useNavigation, useRoute, RouteProp, useFocusEffect } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as DocumentPicker from 'expo-document-picker';
-import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList, DocType, DocTypeLabels, DocOrder, DocumentRecord } from '../models/types';
