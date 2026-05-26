@@ -7,6 +7,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  GIT_TERMINAL_PROMPT: "0"
 
 jobs:
   build:
@@ -22,9 +23,22 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Configure git auth for private repo
+      - name: Debug git remote
         run: |
-          git config --global url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+          echo "=== Git remote ==="
+          git remote -v
+          echo "=== Git config --global ==="
+          git config --global --list || true
+
+      - name: Fix git auth
+        run: |
+          # Remove old remote, add with correct auth
+          git remote remove origin
+          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          # Debug
+          git remote -v
+          echo "=== Test git fetch ==="
+          git fetch origin --dry-run 2>&1 || echo "Fetch test done"
 
       - name: Install CocoaPods
         run: |
