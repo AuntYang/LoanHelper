@@ -1,14 +1,14 @@
-name: Build IPA with EAS
+ï»¿name: Build IPA (unsigned, sign with iLoader)
 
 on:
-  workflow_dispatch:  # ÊÖ¶¯´¥·¢
+  workflow_dispatch:  # æ‰‹åŠ¨è§¦å‘
   push:
-    branches: [main]
+    branches: [master]
 
 jobs:
   build:
     name: Build iOS IPA
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -17,18 +17,41 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Install CocoaPods
+        run: |
+          brew list cocoapods 2>/dev/null || brew install cocoapods
+          pod --version
+
       - name: Install dependencies
         run: npm ci
 
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Expo prebuild (generate ios native project)
+        run: npx expo prebuild --platform ios --clean
 
-      - name: Build iOS IPA
-        run: eas build --platform ios --profile production --non-interactive
-        
+      - name: Install Pods
+        run: npx pod-install
+
+      - name: Build unsigned .app with Xcode
+        run: |
+          cd ios
+          xcodebuild \
+            -workspace loanhelper.xcworkspace \
+            -scheme loanhelper \
+            -configuration Release \
+            -sdk iphoneos \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_ALLOWED=NO \
+            CONFIGURATION_BUILD_DIR=./build \
+            clean build
+
+      - name: Package unsigned IPA
+        run: |
+          mkdir -p Payload
+          cp -R ios/build/loanhelper.app Payload/
+          zip -r loan-helper-unsigned.ipa Payload/
+          rm -rf Payload
+
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
