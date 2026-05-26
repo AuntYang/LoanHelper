@@ -1,4 +1,4 @@
-﻿import ExpoModulesCore
+import ExpoModulesCore
 import Vision
 
 public class VisionTextRecognizerModule: Module {
@@ -6,8 +6,14 @@ public class VisionTextRecognizerModule: Module {
     Name("VisionTextRecognizer")
 
     AsyncFunction("recognize") { (imageUri: String) -> [String] in
-      guard let imageUrl = URL(string: imageUri) ?? URL(fileURLWithPath: imageUri),
-            let imageData = try? Data(contentsOf: imageUrl),
+      let imageUrl: URL
+      if let url = URL(string: imageUri), url.scheme != nil {
+        imageUrl = url
+      } else {
+        imageUrl = URL(fileURLWithPath: imageUri)
+      }
+
+      guard let imageData = try? Data(contentsOf: imageUrl),
             let image = UIImage(data: imageData),
             let cgImage = image.cgImage else {
         throw TextRecognizerError.invalidImage
