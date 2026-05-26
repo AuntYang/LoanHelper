@@ -1,124 +1,85 @@
-import { ExtractedInfo } from '../models/types';
-
-// OCR.space Free API key (public test key, 25k requests/month limit)
-const OCR_API_KEY = 'K87625047988957';
-
-// OCR result interface
-interface OcrSpaceResult {
-  ParsedResults: Array<{
-    ParsedText: string;
-    ErrorMessage: string | null;
-    FileParseExitCode: number;
-  }>;
-  OCRExitCode: number;
-  ErrorMessage: string[];
-}
+﻿import { ExtractedInfo } from '../models/types';
+import { recognizeText } from '../../modules/vision-text-recognizer/src/VisionTextRecognizer';
 
 /**
- * 通过 OCR.space API 识别图片中的文字
+ * 閫氳繃 iOS Vision 妗嗘灦锛堢绾匡級璇嗗埆鍥剧墖涓殑鏂囧瓧
  */
 export async function recognizeImage(imageUri: string): Promise<string> {
   try {
-    const fs = require('expo-file-system');
-    const imageBase64 = await fs.FileSystem.readAsStringAsync(imageUri, {
-      encoding: fs.EncodingType.Base64,
-    });
-
-    const formData = new FormData();
-    // Use base64 image
-    formData.append('base64Image', `data:image/jpeg;base64,${imageBase64}`);
-    formData.append('language', 'chs'); // Chinese simplified
-    formData.append('isOverlayRequired', 'false');
-    formData.append('apikey', OCR_API_KEY);
-    formData.append('OCREngine', '2');
-
-    const response = await fetch('https://api.ocr.space/parse/image', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const result: OcrSpaceResult = await response.json();
-
-    if (result.OCRExitCode === 1 && result.ParsedResults?.length > 0) {
-      return result.ParsedResults[0].ParsedText || '';
-    } else {
-      console.warn('OCR failed:', result.ErrorMessage);
-      return '';
-    }
+    
+    const lines = await recognizeText(imageUri);
+    return lines.join('\n');
   } catch (error) {
-    console.warn('OCR error:', error);
+    console.warn('Vision OCR error:', error);
     return '';
   }
 }
 
 /**
- * 从OCR文本中提取客户+配偶+经营信息
+ * 浠嶰CR鏂囨湰涓彁鍙栧鎴?閰嶅伓+缁忚惀淇℃伅
  */
 export function parseOcrText(text: string): Partial<ExtractedInfo> {
   const info: Partial<ExtractedInfo> = {};
   const lines = text.split('\n').filter(l => l.trim());
 
-  // Try to extract name and ID from first few lines (ID card front)
   for (const line of lines) {
     const t = line.trim();
     if (!t) continue;
 
-    // Name patterns
-    const nameMatch = t.match(/^姓名[：:]\s*(.+)/);
+    // Name
+    const nameMatch = t.match(/^濮撳悕[锛?]\s*(.+)/);
     if (nameMatch && !info.name) info.name = nameMatch[1].replace(/\s+/g, '');
 
     // Gender
-    const genderMatch = t.match(/^性别[：:]\s*(.+)/);
+    const genderMatch = t.match(/^鎬у埆[锛?]\s*(.+)/);
     if (genderMatch) info.gender = genderMatch[1].replace(/\s+/g, '');
-
-    // Nationality (skip, not in our schema)
-    // Year/Month/Day for DOB
 
     // Chinese 18-digit ID number
     const idMatch = t.match(/\d{17}[\dXx]/);
     if (idMatch && !info.idNumber) {
       info.idNumber = idMatch[0];
       if (!info.gender) {
-        info.gender = parseInt(idMatch[0][16]) % 2 === 1 ? '男' : '女';
+        info.gender = parseInt(idMatch[0][16]) % 2 === 1 ? '鐢? : '濂?;
       }
     }
 
-    // Phone number
+    // Phone
     const phoneMatch = t.match(/1[3-9]\d{9}/);
     if (phoneMatch && !info.phone) info.phone = phoneMatch[0];
 
     // Address
-    const addrMatch = t.match(/^住[址址][：:]\s*(.+)/);
+    const addrMatch = t.match(/^浣廩鍧€鍧€][锛?]\s*(.+)/);
     if (addrMatch && !info.address) info.address = addrMatch[1].replace(/\s+/g, '');
 
     // ID validity
-    const valMatch = t.match(/(有效[期期]|签发[机关关])[：:]\s*(.+)/);
+    const valMatch = t.match(/(鏈夋晥[鏈熸湡]|绛惧彂[鏈哄叧鍏砞)[锛?]\s*(.+)/);
     if (valMatch) info.idValidity = valMatch[2].replace(/\s+/g, '');
 
-    // Company name (if business license)
-    const coMatch = t.match(/^[统注]?[一册]?[社信]?[会用]?[代信]?[码息]?[名称称][：:]\s*(.+)/);
+    // Company name (from business license)
+    const coMatch = t.match(/^[缁熸敞]?[涓€鍐宂?[绀句俊]?[浼氱敤]?[浠ｄ俊]?[鐮佹伅]?[鍚嶇О绉癩[锛?]\s*(.+)/);
     if (coMatch && !info.companyName) info.companyName = coMatch[1].replace(/\s+/g, '');
 
     // Business address
-    const baMatch = t.match(/^(住所|经营[场所])[：:]\s*(.+)/);
+    const baMatch = t.match(/^(浣忔墍|缁忚惀[鍦烘墍])[锛?]\s*(.+)/);
     if (baMatch && !info.businessAddress) info.businessAddress = baMatch[2].replace(/\s+/g, '');
 
-    // Spouse info from marriage cert
-    const spouseMatch = t.match(/^配偶[：:]\s*(.+)/);
+    // Spouse name from marriage cert
+    const spouseMatch = t.match(/^閰嶅伓[锛?]\s*(.+)/);
     if (spouseMatch && !info.spouseName) info.spouseName = spouseMatch[1].replace(/\s+/g, '');
 
-    const spouseIdMatch = t.match(/(?:配偶)?[身份身份证号证号码码][：:]\s*(\d{17}[\dXx])/);
+    // Spouse ID from marriage cert / spouse ID card
+    const spouseIdMatch = t.match(/(?:閰嶅伓)?[韬唤韬唤璇佸彿璇佸彿鐮佺爜][锛?]\s*(\d{17}[\dXx])/);
     if (spouseIdMatch && !info.spouseIdNumber) {
       info.spouseIdNumber = spouseIdMatch[1];
       if (!info.spouseGender) {
-        info.spouseGender = parseInt(spouseIdMatch[1][16]) % 2 === 1 ? '男' : '女';
+        info.spouseGender = parseInt(spouseIdMatch[1][16]) % 2 === 1 ? '鐢? : '濂?;
       }
     }
   }
 
-  // If we found a name without gender but have ID number, derive from ID
+  // Derive gender from ID if not found
   if (info.name && !info.gender && info.idNumber) {
-    info.gender = parseInt(info.idNumber[16]) % 2 === 1 ? '男' : '女';
+    info.gender = parseInt(info.idNumber[16]) % 2 === 1 ? '鐢? : '濂?;
   }
 
   return info;
