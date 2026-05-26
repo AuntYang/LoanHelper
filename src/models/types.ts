@@ -55,6 +55,8 @@ export interface ExtractedInfo {
   spouseGender: string;
   spouseIdNumber: string;
   spousePhone: string;
+  ethnicity: string;
+  issuingAuthority: string;
   spouseIdValidity: string;
   // 经营信息
   companyName: string;      // 营业执照名称

@@ -19,15 +19,26 @@ public class VisionTextRecognizerModule: Module {
         throw TextRecognizerError.invalidImage
       }
 
-      return try recognizeText(cgImage: cgImage)
+      // Perform recognition with two passes for best results
+      let lines = try recognizeTextFull(cgImage: cgImage)
+      return lines
     }
   }
 
-  private func recognizeText(cgImage: CGImage) throws -> [String] {
+  private func recognizeTextFull(cgImage: CGImage) throws -> [String] {
     let request = VNRecognizeTextRequest()
     request.recognitionLevel = .accurate
     request.recognitionLanguages = ["zh-Hans", "en-US"]
     request.usesLanguageCorrection = true
+    request.minimumTextHeight = 0.01
+
+    // Add custom words for better Chinese ID card recognition
+    request.customWords = [
+      "姓名", "性别", "民族", "出生", "住址",
+      "身份证号码", "签发机关", "有效期限",
+      "公民身份号码", "中华人民共和国",
+      "居民身份证", "国籍"
+    ]
 
     let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
     try handler.perform([request])
@@ -36,7 +47,18 @@ public class VisionTextRecognizerModule: Module {
       return []
     }
 
-    return observations.compactMap { observation in
+    // Sort by Y coordinate (top to bottom) then by X (left to right)
+    let sorted = observations.sorted { a, b in
+      let aY = a.boundingBox.origin.y + a.boundingBox.size.height / 2
+      let bY = b.boundingBox.origin.y + b.boundingBox.size.height / 2
+      if abs(aY - bY) < 0.02 {
+        // Same line group - sort left to right
+        return a.boundingBox.origin.x < b.boundingBox.origin.x
+      }
+      return aY > bY
+    }
+
+    return sorted.compactMap { observation in
       observation.topCandidates(1).first?.string
     }
   }

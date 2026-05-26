@@ -31,6 +31,7 @@ export default function DocumentManagerScreen() {
   const [showQuickCapture, setShowQuickCapture] = useState(false);
   const [pendingUri, setPendingUri] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<DocType>('id_card_client');
+  const [viewerImage, setViewerImage] = useState<string | null>(null);
   const cameraRef = useRef<CameraView>(null);
 
   useFocusEffect(useCallback(() => { loadDocs(); }, []));
@@ -58,14 +59,11 @@ export default function DocumentManagerScreen() {
   // ===== 从相册导入 =====
   const pickFromAlbum = async () => {
     setShowImportAction(false);
-    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!perm.granted) {
-      Alert.alert('需要权限', '请在设置中开启相册权限');
-      return;
-    }
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      quality: 0.8,
+    // Delay to let the modal dismiss before presenting document picker
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const result = await DocumentPicker.getDocumentAsync({
+      type: 'image/*',
+      copyToCacheDirectory: true,
     });
     if (!result.canceled && result.assets?.[0]) {
       setPendingUri(result.assets[0].uri);
@@ -76,6 +74,8 @@ export default function DocumentManagerScreen() {
   // ===== 从文件导入 =====
   const pickFromFile = async () => {
     setShowImportAction(false);
+    // Delay to let the modal dismiss before presenting document picker
+    await new Promise(resolve => setTimeout(resolve, 500));
     const result = await DocumentPicker.getDocumentAsync({ type: '*/*', copyToCacheDirectory: true });
     if (!result.canceled && result.assets?.[0]) {
       setPendingUri(result.assets[0].uri);
@@ -142,10 +142,10 @@ export default function DocumentManagerScreen() {
           <View key={group.type}>
             <Text style={s.groupLabel}>{group.label}</Text>
             {group.items.map(doc => (
-              <TouchableOpacity key={doc.id} style={s.docItem} onLongPress={() => handleDelete(doc)}>
+              <TouchableOpacity key={doc.id} style={s.docItem} onPress={() => setViewerImage(doc.uri)} onLongPress={() => handleDelete(doc)}>
                 <Image source={{ uri: doc.uri }} style={s.thumb} />
                 <View style={s.docInfo}>
-                  <Text style={s.docName}>{doc.fileName}</Text>
+                  <Text style={s.docName} numberOfLines={1}>{doc.label}</Text>
                   <Text style={s.docDate}>{new Date(doc.createdAt).toLocaleString('zh-CN')}</Text>
                 </View>
               </TouchableOpacity>
@@ -242,7 +242,24 @@ export default function DocumentManagerScreen() {
           </View>
         </View>
       </Modal>
-    </View>
+    
+      {/* Full-screen image viewer */}
+      <Modal visible={!!viewerImage} transparent animationType="fade">
+        <View style={s.viewerOverlay}>
+          <TouchableOpacity style={s.viewerClose} onPress={() => setViewerImage(null)}>
+            <Text style={{ color: '#fff', fontSize: 28 }}>×</Text>
+          </TouchableOpacity>
+          {viewerImage && (
+            <Image
+              source={{ uri: viewerImage }}
+              style={{ width: '100%', height: '80%' }}
+              resizeMode="contain"
+            />
+          )}
+          <Text style={{ color: '#fff', fontSize: 14, marginTop: 10 }}>点击任意位置关闭</Text>
+        </View>
+      </Modal>
+</View>
   );
 }
 

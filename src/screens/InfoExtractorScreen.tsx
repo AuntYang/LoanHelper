@@ -25,41 +25,45 @@ export default function InfoExtractorScreen() {
         const merged = { ...defaultExtractedInfo, ...c.extractedInfo };
         setInfo(merged);
 
-        // Auto-run OCR if we have ID card images but no extracted data
+        //           // Auto-run OCR if we have ID card images but no extracted data
         const docs = c.documents;
-        const hasIdCard = docs.some(d => d.type === 'id_card_client' || d.type === 'id_card_spouse');
+        const hasIdCard = docs.some(d => d.type === "id_card_client" || d.type === "id_card_spouse");
         const hasNoData = !merged.name && !merged.idNumber;
 
         if (hasIdCard && hasNoData) {
           setOcrRunning(true);
-          // Find id_card_client images first
-          const idDocs = docs.filter(d => d.type === 'id_card_client');
-          if (idDocs.length > 0) {
-            const idUri = idDocs[0].uri;
-            const recognized = await recognizeImage(idUri);
-            if (recognized) {
-              setOcrResult(recognized);
-              const parsed = parseOcrText(recognized);
-              const updated = { ...merged, ...parsed };
-              setInfo(updated);
-              // Auto-save parsed info
-              await updateCaseInfo(route.params.caseId, updated);
+          let allParsed: Partial<ExtractedInfo> = {};
+          let rawTexts: string[] = [];
+
+          // Process ALL ID card images (front + back, client + spouse)
+          const idTypes = ["id_card_client", "id_card_spouse"] as const;
+          for (const docType of idTypes) {
+            const typeDocs = docs.filter(d => d.type === docType);
+            for (const doc of typeDocs) {
+              const rawText = await recognizeImage(doc.uri);
+              if (rawText) {
+                rawTexts.push(rawText);
+                const parsed = parseOcrText(rawText);
+                // Merge all parsed fields
+                allParsed = { ...allParsed, ...Object.fromEntries(
+                  Object.entries(parsed).filter(([_, v]) => v != null && v !== "")
+                )};
+              }
             }
           }
 
-          // Also try spouse ID card
-          const spouseDocs = docs.filter(d => d.type === 'id_card_spouse');
-          if (spouseDocs.length > 0) {
-            const spouseUri = spouseDocs[0].uri;
-            const spouseText = await recognizeImage(spouseUri);
-            if (spouseText) {
-              const parsed = parseOcrText(spouseText);
-              const updated = { ...info, ...parsed };
-              setInfo(updated);
-              await updateCaseInfo(route.params.caseId, updated);
-            }
+          if (rawTexts.length > 0) {
+            setOcrResult(rawTexts.join("\n---\n"));
+            // Also try merging text from all images for cross-referencing
+            const mergedText = rawTexts.join(" ");
+            const mergedParsed = parseOcrText(mergedText);
+            const finalParsed = { ...allParsed, ...mergedParsed };
+            const updated = { ...merged, ...finalParsed };
+            setInfo(updated);
+            await updateCaseInfo(route.params.caseId, updated);
           }
           setOcrRunning(false);
+        }
         }
       }
       setLoading(false);
