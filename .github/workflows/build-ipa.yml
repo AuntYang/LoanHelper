@@ -46,9 +46,9 @@ jobs:
       - name: Build unsigned .app with Xcode
         run: |
           cd ios
-          WORKSPACE=$(ls *.xcworkspace 2>/dev/null | head -1)
+          WORKSPACE=$(find . -maxdepth 1 -type d -name "*.xcworkspace" 2>/dev/null | head -1 | sed "s|^\./||")
           echo "Found workspace: $WORKSPACE"
-          SCHEME=$(ls *.xcodeproj 2>/dev/null | head -1 | sed 's/\.xcodeproj//')
+          SCHEME=$(find . -maxdepth 1 -type d -name "*.xcodeproj" 2>/dev/null | head -1 | sed "s|^\./||;s/\.xcodeproj//")
           echo "Using scheme: $SCHEME"
           xcodebuild \
             -workspace "$WORKSPACE" \
@@ -64,7 +64,7 @@ jobs:
       - name: Package unsigned IPA
         run: |
           mkdir -p Payload
-          APP_DIR=$(ls -d ios/build/*.app 2>/dev/null | head -1)
+          APP_DIR=$(find ios/build -maxdepth 1 -type d -name "*.app" 2>/dev/null | head -1)
           echo "App bundle: $APP_DIR"
           cp -R "$APP_DIR" Payload/
           zip -r loan-helper-unsigned.ipa Payload/
@@ -75,3 +75,4 @@ jobs:
         with:
           name: loan-helper-ipa
           path: ./*.ipa
+
