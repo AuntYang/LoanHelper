@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Alert, Mod
 import { useNavigation, useRoute, RouteProp, useFocusEffect } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as DocumentPicker from 'expo-document-picker';
-import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList, DocType, DocTypeLabels, DocOrder, DocumentRecord } from '../models/types';
@@ -58,18 +57,12 @@ export default function DocumentManagerScreen() {
   };
 
   // ===== 从相册导入 =====
-  const pickFromAlbum = async () => {
+    const pickFromAlbum = async () => {
     setShowImportAction(false);
-    // Delay to let the modal dismiss before presenting image picker
     await new Promise(resolve => setTimeout(resolve, 500));
-    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!perm.granted) {
-      Alert.alert("需要权限", "请在设置中开启相册权限");
-      return;
-    }
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      quality: 0.8,
+    const result = await DocumentPicker.getDocumentAsync({
+      type: 'image/*',
+      copyToCacheDirectory: true,
     });
     if (!result.canceled && result.assets?.[0]) {
       setPendingUri(result.assets[0].uri);
@@ -185,7 +178,7 @@ export default function DocumentManagerScreen() {
           <View style={s.dialog}>
             <Text style={s.dialogTitle}>选择导入方式</Text>
             <TouchableOpacity style={s.importOption} onPress={pickFromAlbum}>
-              <Text style={s.importOptionText}>从相册选择照片</Text>
+              <Text style={s.importOptionText}>从相册/文件选择</Text>
             </TouchableOpacity>
             <TouchableOpacity style={s.importOption} onPress={pickFromFile}>
               <Text style={s.importOptionText}>从文件管理器选择</Text>

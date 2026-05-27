@@ -22,8 +22,7 @@
     "plugins": [
       "expo-camera",
       "expo-sqlite",
-      "expo-document-picker",
-      "expo-image-picker"
+      "expo-document-picker"
     ],
     "extra": {
       "eas": {
