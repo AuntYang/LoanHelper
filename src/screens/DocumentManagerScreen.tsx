@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Alert, Mod
 import { useNavigation, useRoute, RouteProp, useFocusEffect } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as DocumentPicker from 'expo-document-picker';
+import { pickPhotoFromLibrary } from '../modules/photo-picker/src/PhotoPicker';
 import * as FileSystem from 'expo-file-system';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList, DocType, DocTypeLabels, DocOrder, DocumentRecord } from '../models/types';
@@ -60,12 +61,9 @@ export default function DocumentManagerScreen() {
     const pickFromAlbum = async () => {
     setShowImportAction(false);
     await new Promise(resolve => setTimeout(resolve, 500));
-    const result = await DocumentPicker.getDocumentAsync({
-      type: 'image/*',
-      copyToCacheDirectory: true,
-    });
-    if (!result.canceled && result.assets?.[0]) {
-      setPendingUri(result.assets[0].uri);
+    const uri = await pickPhotoFromLibrary();
+    if (uri) {
+      setPendingUri(uri);
       setShowTypePicker(true);
     }
   };
