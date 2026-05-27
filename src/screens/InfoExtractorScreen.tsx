@@ -64,7 +64,6 @@ export default function InfoExtractorScreen() {
           }
           setOcrRunning(false);
         }
-        }
       }
       setLoading(false);
     })();
